@@ -1,8 +1,11 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const apicache = require("apicache");
 
-const app = express();
 const port = 3000;
+const app = express();
+let cache = apicache.middleware;
+app.use(cache("5 minutes")); //cache the results for five minutes,
 
 // existing users
 const users = [{ email: "abc@foo.com" }];
@@ -51,6 +54,19 @@ app.get("/employees", (req, res) => {
     results = results.filter(r => +r.age === +age);
   }
   res.json(results);
+});
+
+//VERSIONING
+app.get("/v1/employees", (req, res) => {
+  const employees = [];
+  // code to get employees
+  res.json(employees);
+});
+
+app.get("/v2/employees", (req, res) => {
+  const employees = [];
+  // different code to get employees
+  res.json(employees);
 });
 
 app.get("/articles", (req, res) => {
