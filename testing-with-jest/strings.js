@@ -44,44 +44,38 @@ function byteLengthImproved(str) {
 }
 
 function limitToByteLength(str, maxLength) {
-    var res = [];
-    var len = 0;
-    var i = 0;
-    var correction = 0;
-    var len = 0;
-    var isHalf = 0;
-    for (; i < str.length; i++) {
+    if (4 * str.length <= maxLength){
+        return str;
+    }
+    for (var res = [], i = 0, len = 0, correction = 0; i < str.length; i++) {
         var code = str.charCodeAt(i);
-        if (code <= 0x7f) {
-            correction = 1;
-        } else if (code <= 0x7ff) {
-            correction = 2;
-        } else if (code >= 0xd800 && code <= 0xDFFF) {
+        if (code >= 0xd800 && code <= 0xDFFF) {
             correction = 4;
-            i++;
-            isHalf = true;
-        } else if (code < 0xffff) {
-            correction = 3;
-        } else {
-            correction = 4;
-        }
-        len += correction;
-
-        if (len > maxLength) {
-            return res.join("");
-        }
-        if (isHalf) {
-            res.push(str.charAt(i - 1));
+            len += correction;
+            if (len > maxLength) {
+                return res.join("");
+            }
+            res.push(str.charAt(i++));
             res.push(str.charAt(i));
         } else {
+            if (code <= 0x7f) {
+                correction = 1;
+            } else if (code <= 0x7ff) {
+                correction = 2;
+            } else if (code < 0xffff) {
+                correction = 3;
+            } else {
+                correction = 4;
+            }
+            len += correction;
+            if (len > maxLength) {
+                return res.join("");
+            }
             res.push(str.charAt(i));
         }
-
     }
     return str;
-
 }
-
 
 module.exports = {
     byteLength,

@@ -47,6 +47,12 @@ describe("byteLengthImproved", () => {
 });
 
 describe("limitToByteLength", () => {
+  it("quick return when length is big enough", () => {
+    expect(utils.limitToByteLength("üä", 8)).toEqual("üä");
+    expect(utils.limitToByteLength("象形", 8)).toEqual("象形");
+    expect(utils.limitToByteLength("😀😀", 16)).toEqual("😀😀");
+  });
+
   it("German(2 bytes per character)", () => {
     expect(utils.limitToByteLength("üäüäüäüäüä", 4)).toEqual("üä");
     expect(utils.limitToByteLength("üäüäüäüäüä", 5)).toEqual("üä");
@@ -81,6 +87,10 @@ describe("limitToByteLength", () => {
   });
 
   it("Russian", () => {
-    expect(utils.limitToByteLength("Привет", 6)).toEqual("При");
+    expect(utils.limitToByteLength("Привет", 0)).toEqual("");
+    expect(utils.limitToByteLength("Привет", 1)).toEqual("");
+    expect(utils.limitToByteLength("Привет", 2)).toEqual("П");
+    expect(utils.limitToByteLength("До свиданья!", 5)).toEqual("До ");
+    expect(utils.limitToByteLength("До свиданья!", 6)).toEqual("До ");
   });
 });
