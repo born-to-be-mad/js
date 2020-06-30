@@ -16,6 +16,10 @@ function byteLength(str) {
     return len;
 }
 
+/** Compute the length in UTF8 of each unicode codepoints returned by charCodeAt()
+ *  (based on wikipedia's descriptions of UTF8, and UTF16 surrogate characters).
+ *  It follows RFC3629 (where UTF-8 characters are at most 4-bytes long).
+ * */
 function byteLengthImproved(str) {
     var len = 0;
     for (var i = 0; i < str.length; i++) {
@@ -40,26 +44,42 @@ function byteLengthImproved(str) {
 }
 
 function limitToByteLength(str, maxLength) {
+    var res = [];
     var len = 0;
     var i = 0;
     var correction = 0;
-    for (; i < str.length && len <= maxLength; i++) {
+    var len = 0;
+    var isHalf = 0;
+    for (; i < str.length; i++) {
         var code = str.charCodeAt(i);
         if (code <= 0x7f) {
             correction = 1;
         } else if (code <= 0x7ff) {
             correction = 2;
-        } else if (code < 0xffff) {
-            correction = 3;
         } else if (code >= 0xd800 && code <= 0xDFFF) {
             correction = 4;
             i++;
+            isHalf = true;
+        } else if (code < 0xffff) {
+            correction = 3;
         } else {
             correction = 4;
         }
         len += correction;
+
+        if (len > maxLength) {
+            return res.join("");
+        }
+        if (isHalf) {
+            res.push(str.charAt(i - 1));
+            res.push(str.charAt(i));
+        } else {
+            res.push(str.charAt(i));
+        }
+
     }
-    return str.substring(0, i);
+    return str;
+
 }
 
 
