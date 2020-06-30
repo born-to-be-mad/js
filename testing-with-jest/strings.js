@@ -49,7 +49,7 @@ function limitToByteLength(str, maxLength) {
     }
     for (var res = [], i = 0, len = 0, correction = 0; i < str.length; i++) {
         var code = str.charCodeAt(i);
-        if (code >= 0xd800 && code <= 0xDFFF) {
+        if (code >= 0xD800 && code <= 0xDFFF) {
             correction = 4;
             len += correction;
             if (len > maxLength) {
@@ -58,11 +58,11 @@ function limitToByteLength(str, maxLength) {
             res.push(str.charAt(i++));
             res.push(str.charAt(i));
         } else {
-            if (code <= 0x7f) {
+            if (code <= 0x7F) {
                 correction = 1;
-            } else if (code <= 0x7ff) {
+            } else if (code <= 0x7FF) {
                 correction = 2;
-            } else if (code < 0xffff) {
+            } else if (code < 0xFFFF) {
                 correction = 3;
             } else {
                 correction = 4;
