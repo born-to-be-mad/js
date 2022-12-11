@@ -9,7 +9,7 @@
   "author": "Dzmitry Marudau[vinmaster]",
   "license": "ISC",
   "devDependencies": {
-    "jest": "^25.1.0"
+    "jest": "^29.3.1"
   },
   "dependencies": {
     "node-fetch": "^3.2.10"
